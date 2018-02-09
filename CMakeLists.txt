@@ -33,7 +33,26 @@ set(SRCS
 set(DEPENDENCY_DIR ${CMAKE_CURRENT_BINARY_DIR}/dependencies)
 set(DEPENDENCY_INSTALL_DIR ${DEPENDENCY_DIR}/install)
 
-find_package(OpenCV REQUIRED)
+################################################################
+# don't use opencv as found by any prior running of find_package
+unset(OpenCV_CONFIG_PATH CACHE)
+unset(OpenCV_DIR CACHE)
+
+set(TMP_PREFIX_PATH ${CMAKE_PREFIX_PATH})
+set(CMAKE_PREFIX_PATH "/usr/opencv-3.3.0/install")
+find_package(OpenCV 3.0 REQUIRED)
+
+# restore CMAKE_PREFIX_PATH and other cached variables
+# so nothing other package finds this opencv
+set(CMAKE_PREFIX_PATH ${TMP_PREFIX_PATH})
+
+unset(OpenCV_CONFIG_PATH CACHE)
+unset(OpenCV_DIR CACHE)
+
+# find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+################################################################
+# find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 find_package(Boost REQUIRED)
